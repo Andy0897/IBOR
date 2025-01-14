@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar}"></nav>
+<div class="container mt-5">
+    <h1>Оферти</h1>
+    <div class="d-inline-block  m-4" th:each="car : ${cars}">
+        <div class="card" style="width: 300px; ">
+            <form th:action="@{/cars/show/{id}(id=${car.car.id})}" method="get" class="h-100">
+                <button type="submit" class="btn p-0 w-100 h-100" style="border: none; text-align: left;">
+                    <div class="card-img-top" style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
+                        <img th:src="@{'data:image/jpeg;base64,' + ${car.base64Images.get(0)}}"
+                             alt="Car Image" style="width: 100%; height: 100%; object-fit: cover;" />
+                    </div>
+                    <div class="card-body" style="min-height: 160px;">
+                        <h3 class="card-title text-truncate" th:text="${car.car.brand.name} + ' ' + ${car.car.model.name}" style="white-space: normal;"></h3>
+                        <div>
+                            <h7 class="text-muted mb-1" style="text-decoration: line-through;" th:text="${car.car.price} + ' лв.'"></h7>
+                            <h4 class="text-danger mb-0" th:text="${car.car.offerPrice} + ' лв.'"></h4>
+                            <p class="card-text" th:text="'(' + ${car.car.mileage} + ' км)'"></p>
+                        </div>
+                    </div>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
