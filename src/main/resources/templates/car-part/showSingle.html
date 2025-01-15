@@ -13,13 +13,13 @@
             <div class="text-center">
                 <div style="max-width: auto; margin: 0 auto;">
                     <img id="largeImage" class="img-fluid rounded"
-                         th:src="'data:image/jpeg;base64,' + ${carPart.base64Images.get(carPart.carPart.mainImageIndex)}"
+                         th:src="'data:image/jpeg;base64,' + ${carPartWithImages.base64Images.get(carPartWithImages.carPart.mainImageIndex)}"
                          alt="Main Image" style="width: 100%; height: 500px; object-fit: cover;" />
                 </div>
 
                 <!-- Thumbnail Images -->
                 <div class="row mt-3 mx-auto" style="width: 100%; max-width: 500px;">
-                    <div th:each="image, iterStat : ${carPart.base64Images}" class="col-2 d-flex justify-content-center">
+                    <div th:each="image, iterStat : ${carPartWithImages.base64Images}" class="col-2 d-flex justify-content-center">
                         <div style="width: 100%; height: 100px; overflow: hidden; background-color: black;">
                             <img th:src="'data:image/jpeg;base64,' + ${image}"
                                  alt="Thumbnail"
@@ -34,18 +34,23 @@
         <!-- Details Section -->
         <div class="col-4">
             <div class="container">
-                <form th:action="@{/car-parts/delete/{id}(id=${carPart.carPart.id})}" method="post" style="width: 22rem;">
+                <form th:action="@{/car-parts/delete/{id}(id=${carPartWithImages.carPart.id})}" method="post" style="width: 22rem;">
                     <button class="btn btn-primary mt-1 mb-2 p-2" style="width: 100%; font-weight: bold;">
                         Изтрий продукт
                     </button>
                 </form>
+                <form th:action="@{/order-items/submit/{carPartId}(carPartId=${carPartWithImages.carPart.id})}" method="post" th:object="${orderItem}" style="width: 22rem;">
+                    <input type="number" th:field="*{quantity}" id="quantity" class="form-control" name="quantity" value="1" min="1" max="10" step="1">
+                    <div th:each="error : ${#fields.errors('quantity')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
+                    <input type="submit" value="submit">
+                </form>
                 <div class="card" style="width: 22rem;">
                     <div class="card-header">
                         <!-- Title -->
-                        <h2><strong th:text="${carPart.carPart.title}" class="mt-1"></strong></h2>
+                        <h2><strong th:text="${carPartWithImages.carPart.title}" class="mt-1"></strong></h2>
                         <!-- Price -->
                         <div class="mb-1 mt-1">
-                            <h2 class="card-subtitle text-muted" th:text="${carPart.carPart.price} + ' лв.'"></h2>
+                            <h2 class="card-subtitle text-muted" th:text="${carPartWithImages.carPart.price} + ' лв.'"></h2>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
@@ -55,7 +60,7 @@
                                 <div class="ms-3" style="flex-grow: 1;">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Описание</p>
                                     <h5 class="mb-0" style="white-space: normal; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word;">
-                                        <strong th:text="${carPart.carPart.description}"></strong>
+                                        <strong th:text="${carPartWithImages.carPart.description}"></strong>
                                     </h5>
                                 </div>
                             </div>
@@ -65,7 +70,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Марка</p>
-                                    <h5 class="mb-0"><strong th:text="${carPart.carPart.brand.name}"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${carPartWithImages.carPart.brand.name}"></strong></h5>
                                 </div>
                             </div>
                         </li>
@@ -74,7 +79,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Модел</p>
-                                    <h5 class="mb-0"><strong th:text="${carPart.carPart.model.name}"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${carPartWithImages.carPart.model.name}"></strong></h5>
                                 </div>
                             </div>
                         </li>

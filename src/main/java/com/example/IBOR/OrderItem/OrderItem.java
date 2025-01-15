@@ -2,7 +2,9 @@ package com.example.IBOR.OrderItem;
 
 import com.example.IBOR.CarPart.CarPart;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "order_items")
@@ -16,7 +18,8 @@ public class OrderItem {
     @JoinColumn(name = "car_part_id")
     private CarPart carPart;
 
-    @Min(value = 1, message = "Наличността трябва да бъде поне 1.")
+    @Min(value = 1, message = "Броят трябва да бъде поне 1.")
+    @Max(value = 10, message = "Броят не трябва да надвишава 10.")
     private int quantity;
 
     private double totalPrice;

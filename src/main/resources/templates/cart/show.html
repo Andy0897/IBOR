@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar}"></nav>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Вашата количка</h1>
+    <div th:if="${cart.items.empty}" class="text-center">
+        <p style="font-size: 1.2rem; color: gray;">Вашата количка е празна.</p>
+    </div>
+    <div class="row" th:each="item : ${cartItemsWithImages}" style="margin-bottom: 20px;">
+        <div class="col-md-12">
+            <div class="card" style="border: 1px solid #ddd; border-radius: 10px; padding: 15px;">
+                <div class="row">
+                    <!-- Car Part Image -->
+                    <div class="col-md-3">
+                        <img th:src="'data:image/jpeg;base64,' + ${item.base64Images[0]}"
+                             alt="Car Part Image"
+                             style="width: 100%; height: auto; border-radius: 5px; object-fit: cover;" />
+                    </div>
+                    <!-- Car Part Details -->
+                    <div class="col-md-6">
+                        <h3 style="font-weight: bold; margin-bottom: 10px;">
+                            <a th:href="@{/car-parts/show/{id}(id=${item.carPart.id})}"
+                               style="text-decoration: none; color: #007bff;"
+                               th:text="${item.carPart.title}">
+                                Car Part Title
+                            </a>
+                        </h3>
+                        <p style="font-size: 1rem; color: gray;" th:text="${item.carPart.description}"></p>
+                        <p style="margin-top: 10px;">
+                            <strong>Марка:</strong> <span th:text="${item.carPart.brand.name}"></span> |
+                            <strong>Модел:</strong> <span th:text="${item.carPart.model.name}"></span>
+                        </p>
+                    </div>
+                    <!-- Quantity and Price -->
+                    <div class="col-md-3 text-center">
+                        <p style="font-size: 1.2rem; font-weight: bold; color: #333;">Брой:
+                            <span th:text="${item.carPart.quantity}"></span>
+                        </p>
+                        <p style="font-size: 1.2rem; font-weight: bold; color: #28a745;">Обща цена:
+                            <!--<span th:text="${item.carPart.price * item.quantity} + ' лв.'"></span>-->
+                        </p>
+                        <form th:action="@{/order-items/delete/{id}(id=${item.carPart.id})}" method="post">
+                            <button class="btn btn-danger mt-2" style="font-size: 0.9rem;">Премахни</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4" th:if="${!cart.items.empty}">
+        <form th:action="@{/order/checkout}" method="post">
+            <button class="btn btn-success" style="font-size: 1.2rem; padding: 10px 20px;">Поръчай</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

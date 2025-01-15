@@ -3,8 +3,11 @@ package com.example.IBOR.CarPart;
 import com.example.IBOR.Car.Car;
 import com.example.IBOR.Car.CarWithBase64Images;
 import com.example.IBOR.CarBrand.BrandRepository;
+import com.example.IBOR.Order.Order;
+import com.example.IBOR.OrderItem.OrderItem;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,8 +70,9 @@ public class CarPartController {
     }
 
     @GetMapping("/")
-    public String getShowCars(Model model) {
+    public String getShowCarParts(Model model) {
         List<CarPart> carParts = (List<CarPart>) carPartRepository.findAll();
+        OrderItem orderItem = new OrderItem();
 
         List<CarPartWithBase64Images> carPartsWithImages = carParts.stream().map(carPart -> {
             List<String> base64Images = carPart.getImages().stream()
@@ -88,7 +92,9 @@ public class CarPartController {
                 .map(Base64::encodeBase64String)
                 .collect(Collectors.toList());
         CarPartWithBase64Images carPartWithImages = new CarPartWithBase64Images(carPart, base64Images);
-        model.addAttribute("carPart", carPartWithImages);
+        OrderItem orderItem = new OrderItem();
+        model.addAttribute("carPartWithImages", carPartWithImages);
+        model.addAttribute("orderItem", orderItem);
         return "car-part/showSingle";
     }
 

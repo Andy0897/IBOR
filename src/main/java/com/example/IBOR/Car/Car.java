@@ -32,8 +32,8 @@ public class Car {
 
     private String engine;
 
-    @Size(min = 1, message = "Мощността трябва да бъде по-голяма или равна на 1 к.с.")
-    @Size(max = 2000, message = "Мощността не трябва да надвишава 2000 к.с.")
+    @Min(value = 1, message = "Мощността трябва да бъде по-голяма или равна на 1 к.с.")
+    @Max(value = 2000, message = "Мощността не трябва да надвишава 2000 к.с.")
     private int power;
 
     private String eurostandard;
@@ -42,10 +42,10 @@ public class Car {
 
     private String category;
 
-    @Size(min = 1, message = "Пробегът трябва да бъде поне 1 км.")
+    @Min(value = 1, message = "Пробегът трябва да бъде поне 1 км.")
     private int mileage;
 
-    @Size(min = 1000, message = "Цената трябва да бъде поне 1000 лв.")
+    @Min(value = 1000, message = "Цената трябва да бъде поне 1000 лв.")
     private int price;
 
     private boolean isOffer;

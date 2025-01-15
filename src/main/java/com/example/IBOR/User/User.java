@@ -1,5 +1,7 @@
 package com.example.IBOR.User;
 
+import com.example.IBOR.Car.Car;
+import com.example.IBOR.Cart.Cart;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,6 +29,10 @@ public class User {
     @Size(min = 8, message = "Паролата трябва да съдържа поне 8 символа")
     @Size(max = 1000, message = "Паролата не трябва да надвишава 14 символа")
     private String password;
+
+    @OneToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @Column(columnDefinition = "VARCHAR(20) DEFAULT 'USER'")
     private String role;
@@ -63,6 +69,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public String getRole() {
