@@ -12,14 +12,14 @@
             <div class="text-center">
                 <div style="max-width: auto; margin: 0 auto;">
                     <img id="largeImage" class="img-fluid rounded"
-                         th:src="'data:image/jpeg;base64,' + ${car.base64Images.get(0)}"
+                         th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(car.images.get(car.mainImageIndex))}"
                          alt="Large Image" style="width: 100%; height: 500px; object-fit: cover;" />
                 </div>
 
                 <div class="row mt-3 mx-auto" style="width: 100%; max-width: 500px;">
-                    <div th:each="image, iterStat : ${car.base64Images}" class="col-2 d-flex justify-content-center">
+                    <div th:each="image, iterStat : ${car.images}" class="col-2 d-flex justify-content-center">
                         <div style="width: 100%; height: 100px; overflow: hidden; background-color: black;">
-                            <img th:src="'data:image/jpeg;base64,' + ${image}"
+                            <img th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(image)}"
                                  alt="Thumbnail"
                                  style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;"
                                  class="clickable-thumbnail" />
@@ -30,30 +30,30 @@
         </div>
         <div class="col-4">
             <div class="container">
-                <form th:if="${car.car.isOffer == false}" th:action="@{/cars/offers/add/{id}(id=${car.car.id})}" method="get" style="width: 22rem;">
+                <form th:if="${car.isOffer == false}" th:action="@{/cars/offers/add/{id}(id=${car.id})}" method="get" style="width: 22rem;">
                     <button class="btn btn-outline-primary mt-1 mb-2 p-2" style="width: 100%; font-weight: bold;">
                         Добави оферта
                     </button>
                 </form>
-                <form th:if="${car.car.isOffer == true}" th:action="@{/cars/offers/delete/{id}(id=${car.car.id})}" method="post" style="width: 22rem;">
+                <form th:if="${car.isOffer == true}" th:action="@{/cars/offers/delete/{id}(id=${car.id})}" method="post" style="width: 22rem;">
                     <button class="btn btn-outline-primary mt-1 mb-2 p-2" style="width: 100%; font-weight: bold;">
                         Премахни оферта
                     </button>
                 </form>
-                <form th:action="@{/cars/delete/{id}(id=${car.car.id})}" method="post" style="width: 22rem;">
+                <form th:action="@{/cars/delete/{id}(id=${car.id})}" method="post" style="width: 22rem;">
                     <button class="btn btn-primary mt-1 mb-2 p-2" style="width: 100%; font-weight: bold;">
                         Изтрий обява
                     </button>
                 </form>
                 <div class="card" style="width: 22rem;">
                     <div class="card-header">
-                        <h2><strong th:text="${car.car.brand.name} + ' ' + ${car.car.model.name}" class="mt-1"></strong></h2>
-                        <div class="mb-1 mt-1" th:if="${!car.car.isOffer}">
-                            <h2 class="card-subtitle text-muted" th:text="${car.car.price} + ' лв.'"></h2>
+                        <h2><strong th:text="${car.brand.name} + ' ' + ${car.model.name}" class="mt-1"></strong></h2>
+                        <div class="mb-1 mt-1" th:if="${!car.isOffer}">
+                            <h2 class="card-subtitle text-muted" th:text="${car.price} + ' лв.'"></h2>
                         </div>
-                        <div class="mb-1 mt-1" th:if="${car.car.isOffer}">
-                            <h6 class="text-muted mb-1" style="text-decoration: line-through;" th:text="${car.car.price} + ' лв.'"></h6>
-                            <h2 class="text-danger mb-0" th:text="${car.car.offerPrice} + ' лв.'"></h2>
+                        <div class="mb-1 mt-1" th:if="${car.isOffer}">
+                            <h6 class="text-muted mb-1" style="text-decoration: line-through;" th:text="${car.price} + ' лв.'"></h6>
+                            <h2 class="text-danger mb-0" th:text="${car.offerPrice} + ' лв.'"></h2>
                         </div>
                         <button class="btn btn-outline-primary mt-1 mb-2 p-2" style="width: 100%; font-weight: bold;" onclick="showPhoneNumber(this)">
                              Обади се
@@ -64,7 +64,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3 ">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Двигател</p>
-                                    <h5 class="mb-0"><strong th:text="${car.car.engine}"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${car.engine}"></strong></h5>
                                 </div>
                             </div>
                         </li>
@@ -72,7 +72,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Мощност</p>
-                                    <h5 class="mb-0"><strong th:text="${car.car.power} + ' к.с.'"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${car.power} + ' к.с.'"></strong></h5>
                                 </div>
                             </div>
                         </li>
@@ -80,7 +80,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Евростандарт</p>
-                                    <h5 class="mb-0"><strong th:text="${car.car.eurostandard}"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${car.eurostandard}"></strong></h5>
                                 </div>
                             </div>
                         </li>
@@ -88,7 +88,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Скоростна кутия</p>
-                                    <h5 class="mb-0"><strong th:text="${car.car.gearbox}"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${car.gearbox}"></strong></h5>
                                 </div>
                             </div>
                         </li>
@@ -96,7 +96,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Категория</p>
-                                    <h5 class="mb-0"><strong th:text="${car.car.category}"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${car.category}"></strong></h5>
                                 </div>
                             </div>
                         </li>
@@ -104,7 +104,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="ms-3">
                                     <p class="text-muted mb-1" style="font-size: 0.9rem;">Пробег</p>
-                                    <h5 class="mb-0"><strong th:text="${car.car.mileage} + ' км.'"></strong></h5>
+                                    <h5 class="mb-0"><strong th:text="${car.mileage} + ' км.'"></strong></h5>
                                 </div>
                             </div>
                         </li>
@@ -116,7 +116,7 @@
         </div>
     </div>
 </div>
-
+<footer th:replace="~{fragments/footer}"></footer>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const thumbnails = document.querySelectorAll('.clickable-thumbnail');

@@ -3,36 +3,106 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
-<div class="container mt-5">
-    <div class="d-inline-block m-4" th:each="car : ${cars}">
-        <div class="card" style="width: 300px;">
-            <form th:action="@{/cars/show/{id}(id=${car.car.id})}" method="get" class="h-100">
-                <button type="submit" class="btn p-0 w-100 h-100" style="border: none; text-align: left;">
-                    <div class="card-img-top"
-                         style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
-                        <img th:src="@{'data:image/jpeg;base64,' + ${car.base64Images.get(car.car.mainImageIndex)}}"
-                             alt="Main Image" style="width: 100%; height: 100%; object-fit: cover;"/>
-                    </div>
-                    <div class="card-body" style="min-height: 185px;">
-                        <h3 class="card-title text-truncate"
-                            th:text="${car.car.brand.name} + ' ' + ${car.car.model.name}"
-                            style="white-space: normal;"></h3>
-                        <div th:if="${!car.car.isOffer}">
-                            <h4 class="card-subtitle text-muted" th:text="${car.car.price} + ' лв.'"></h4>
-                            <p class="card-text" th:text="'(' + ${car.car.mileage} + ' км)'"></p>
+
+<div class="container mt-5" style="max-width: 1000px;">
+    <div class="mt-5">
+        <h2 class="mb-3">Филтър за автомобили</h2>
+        <form th:action="@{/cars/filter}" method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="brand" class="form-label">Марка</label>
+                <select class="form-control" id="brand" name="brand" onchange="updateModels(this.value)">
+                    <option value="">Избери</option>
+                    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="model" class="form-label">Модел</label>
+                <select class="form-control" id="model" name="model">
+                    <option value="">Избери</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="minPrice" class="form-label">Минимална цена</label>
+                <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Минимална цена">
+            </div>
+            <div class="col-md-4">
+                <label for="maxPrice" class="form-label">Максимална цена</label>
+                <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Максимална цена">
+            </div>
+            <div class="col-md-4">
+                <label for="mileage" class="form-label">Максимален пробег</label>
+                <input type="number" id="mileage" name="mileage" class="form-control" placeholder="Максимален пробег">
+            </div>
+            <div class="col-md-4">
+                <label for="isOffer" class="form-label">Оферта</label>
+                <select id="isOffer" name="isOffer" class="form-select">
+                    <option value="">Всички</option>
+                    <option value="true">Да</option>
+                    <option value="false">Не</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Приложи филтър</button>
+            </div>
+        </form>
+    </div>
+    <h1 class="mb-4 text-center">Автомобили</h1>
+    <div th:if="${cars.empty}" class="text-center" style="min-height: 250px;">
+        <p style="font-size: 1.5rem; color: gray;">Все още няма обяви.</p>
+    </div>
+
+    <div class="row g-4" th:if="${!cars.empty}">
+        <div th:each="car : ${cars}" class="col-md-4">
+            <div class="card h-100">
+                <form th:action="@{/cars/show/{id}(id=${car.id})}" method="get" class="h-100">
+                    <button type="submit" class="btn p-0 w-100 h-100" style="border: none; text-align: left;">
+                        <div class="card-img-top" style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
+                            <img th:src="@{'data:image/jpeg;base64,' + ${encoder.encodeToBase64(car.images.get(car.mainImageIndex))}}"
+                                 alt="Main Image" style="object-fit: cover; width: 100%; height: auto; max-height: 200px;"/>
                         </div>
-                        <div th:if="${car.car.isOffer}">
-                            <h7 class="text-muted mb-1" style="text-decoration: line-through;"
-                                th:text="${car.car.price} + ' лв.'"></h7>
-                            <h4 class="text-danger mb-0" th:text="${car.car.offerPrice} + ' лв.'"></h4>
-                            <p class="card-text" th:text="'(' + ${car.car.mileage} + ' км)'"></p>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h3 class="card-title text-truncate"
+                                th:text="${car.brand.name} + ' ' + ${car.model.name}"
+                                style="white-space: normal;"></h3>
+                            <div th:if="${!car.isOffer}">
+                                <h4 class="card-subtitle text-muted" th:text="${car.price} + ' лв.'"></h4>
+                                <p class="card-text" th:text="'(' + ${car.mileage} + ' км)'"></p>
+                            </div>
+                            <div th:if="${car.isOffer}">
+                                <h7 class="text-muted mb-1" style="text-decoration: line-through;"
+                                    th:text="${car.price} + ' лв.'"></h7>
+                                <h4 class="text-danger mb-0" th:text="${car.offerPrice} + ' лв.'"></h4>
+                                <p class="card-text" th:text="'(' + ${car.mileage} + ' км)'"></p>
+                            </div>
                         </div>
-                    </div>
-                </button>
-            </form>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
+<footer th:replace="~{fragments/footer}"></footer>
+<script>
+    function updateModels(brandId) {
+        fetch(`/models/models-by-brand/${brandId}`)
+        .then(response => {
+            return response.json();
+        })
+        .then(models => {
+
+            const modelDropdown = document.getElementById("model");
+            modelDropdown.innerHTML = '<option value="">Избери</option>';
+
+            models.forEach(model => {
+                const option = document.createElement("option");
+                option.value = model.id;
+                option.textContent = model.name;
+                modelDropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error fetching models:", error));
+    }
+</script>
 </body>
 </html>

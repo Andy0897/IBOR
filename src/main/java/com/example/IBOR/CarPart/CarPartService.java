@@ -4,6 +4,9 @@ import com.example.IBOR.Car.Car;
 import com.example.IBOR.Car.CarRepository;
 import com.example.IBOR.CarBrand.BrandRepository;
 import com.example.IBOR.CarModel.ModelRepository;
+import com.example.IBOR.Cart.CartRepository;
+import com.example.IBOR.Order.OrderRepository;
+import com.example.IBOR.OrderItem.OrderItemRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -54,7 +57,7 @@ public class CarPartService {
                 bindingResult.hasFieldErrors("title") ||
                 bindingResult.hasFieldErrors("description") ||
                 bindingResult.hasFieldErrors("price") ||
-                bindingResult.hasFieldErrors("quantity") ||
+                carPart.getQuantity() < 1 ||
                 carPart.getCategory() == null || carPart.getCategory().equals("")) {
 
             model.addAttribute("carPart", carPart);
@@ -63,7 +66,7 @@ public class CarPartService {
             model.addAttribute("areImagesSelected", !nullImages);
             model.addAttribute("isBrandSelected", carPart.getBrand() != null);
             model.addAttribute("isModelSelected", carPart.getModel() != null);
-            model.addAttribute("isCategorySelected", carPart.getCategory() != null && !carPart.getCategory().equals(""));
+            model.addAttribute("isCategorySelected", !carPart.getCategory().isEmpty());
             model.addAttribute("categories", List.of(
                     "Трансмисия",
                     "Спирачна система",
@@ -77,6 +80,7 @@ public class CarPartService {
                     "Системи за охлаждане",
                     "Масла и течности"
             ));
+            model.addAttribute("invalidQuantity", carPart.getQuantity() < 1);
             return "car-part/add";
         }
 
@@ -85,12 +89,6 @@ public class CarPartService {
 
         carPartRepository.save(carPart);
 
-        return "redirect:/car-parts/";
-    }
-
-    public String submitDeleteCarPart(Long id) {
-        System.out.println("id: " + id);
-        carPartRepository.deleteById(id);
         return "redirect:/car-parts/";
     }
 

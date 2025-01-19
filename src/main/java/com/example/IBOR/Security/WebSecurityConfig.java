@@ -1,6 +1,7 @@
 package com.example.IBOR.Security;
 
 import com.example.IBOR.User.UserDetailsServiceImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,9 +26,9 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home").permitAll()
-                        .requestMatchers("/sign-up", "/submit", "/sign-in").anonymous()
-                        .requestMatchers("/cars/add", "/cars/submit").hasAuthority("ADMIN")
+                        .requestMatchers("/", "/home", "/images/**").permitAll()
+                        .requestMatchers("/sign-in", "/sign-up", "/submit").anonymous()
+                        .requestMatchers("/orders/show-all", "/orders/submit-update-status/**", "/car-parts/add", "/car-parts/submit", "/cars/add", "/cars/submit", "/cars/delete/**", "/cars/offers/add/**", "/cars/offers/submit", "/cars/offers/delete/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -37,11 +38,14 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
-                /*.exceptionHandling(exceptionHandling -> exceptionHandling
+                .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.sendRedirect("/access-denied");
                         })
-                )*/
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page Not Found");
+                        })
+                )
                 .logout((logout) -> logout.permitAll());
         return http.build();
     }

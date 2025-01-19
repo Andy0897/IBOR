@@ -3,41 +3,102 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
-<div class="container mt-5">
-    <div class="d-inline-block m-4" th:each="carPartWithImages : ${carPartsWithImages}">
-        <div class="card" style="width: 300px;">
-            <form th:action="@{/car-parts/show/{id}(id=${carPartWithImages.carPart.id})}" method="get" class="h-100">
-                <button type="submit" class="btn p-0 w-100 h-100" style="border: none; text-align: left;">
-                    <!-- Card Image -->
-                    <div class="card-img-top"
-                         style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
-                        <img th:src="@{'data:image/jpeg;base64,' + ${carPartWithImages.base64Images.get(carPartWithImages.carPart.mainImageIndex)}}"
-                             alt="Main Image" style="width: 100%; height: 100%; object-fit: cover;"/>
-                    </div>
-                    <!-- Card Body -->
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <h3 class="card-title text-truncate" th:text="${carPartWithImages.carPart.title}"
-                            style="white-space: normal;"></h3>
-                        <p th:if="${carPartWithImages.carPart.description.length() <= 24}"
-                           class="card-text text-muted text-truncate" th:text="${carPartWithImages.carPart.description}"
-                           style="white-space: normal;"></p>
-                        <p th:if="${carPartWithImages.carPart.description.length() > 24}"
-                           class="card-text text-muted text-truncate"
-                           th:text="${carPartWithImages.carPart.description.substring(0,23)} + '...'"
-                           style="white-space: normal;"></p>
-                        <div>
+
+<div class="container mt-5" style="max-width: 1000px;">
+    <div class="mt-5 mb-4">
+        <h2 class="mb-3">Филтър за части</h2>
+        <form th:action="@{/car-parts/filter}" method="get" class="row g-3">
+            <div class="col-md-4">
+                <label for="brand" class="form-label">Марка</label>
+                <select class="form-control" id="brand" name="brand" onchange="updateModels(this.value)">
+                    <option value="">Всички</option>
+                    <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="model" class="form-label">Модел</label>
+                <select class="form-control" id="model" name="model">
+                    <option value="">Всички</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="category" class="form-label">Категория</label>
+                <select id="category" name="category" class="form-control">
+                    <option value="">Всички</option>
+                    <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="minPrice" class="form-label">Минимална цена</label>
+                <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Минимална цена">
+            </div>
+            <div class="col-md-4">
+                <label for="maxPrice" class="form-label">Максимална цена</label>
+                <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Максимална цена">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Приложи филтър</button>
+            </div>
+        </form>
+    </div>
+    <h1 class="mb-4 text-center">Авточасти</h1>
+
+    <div th:if="${carParts.empty}" class="text-center" style="min-height: 250px;">
+        <p style="font-size: 1.5rem; color: gray;">Все още няма продукти.</p>
+    </div>
+
+    <div class="row g-4" th:if="${!carParts.empty}">
+        <div th:each="carPart : ${carParts}" class="col-md-4">
+            <div class="card h-100">
+                <form th:action="@{/car-parts/show/{id}(id=${carPart.id})}" method="get" class="h-100">
+                    <button type="submit" class="btn p-0 w-100 h-100" style="border: none; text-align: left;">
+                        <div class="card-img-top" style="width: 100%; height: 200px; overflow: hidden; background-color: black;">
+                            <img th:src="@{'data:image/jpeg;base64,' + ${encoder.encodeToBase64(carPart.images.get(carPart.mainImageIndex))}}"
+                                 alt="Main Image" style="object-fit: cover; width: 100%; height: auto; max-height: 200px;"/>
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h3 class="card-title text-truncate" th:text="${carPart.title}" style="white-space: normal;"></h3>
+                            <p th:if="${carPart.description.length() <= 24}"
+                               class="card-text text-muted text-truncate" th:text="${carPart.description}" style="white-space: normal;"></p>
+                            <p th:if="${carPart.description.length() > 24}"
+                               class="card-text text-muted text-truncate"
+                               th:text="${carPart.description.substring(0,23)} + '...'" style="white-space: normal;"></p>
                             <div>
-                                <h4 class="card-subtitle text-muted"
-                                    th:text="${carPartWithImages.carPart.price} + ' лв.'"></h4>
-                                <p th:if="${carPartWithImages.carPart.quantity > 0}" class="card-text text-success fw-bold">Налично</p>
-                                <p th:if="${carPartWithImages.carPart.quantity == 0}" class="card-text text-danger fw-bold">Изчерпано</p>
+                                <div>
+                                    <h4 class="card-subtitle text-muted" th:text="${#numbers.formatDecimal(carPart.price, 2, 2)} + ' лв.'"></h4>
+                                    <p th:if="${carPart.quantity > 0}" class="card-text text-success fw-bold">Налично</p>
+                                    <p th:if="${carPart.quantity == 0}" class="card-text text-danger fw-bold">Изчерпано</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </button>
-            </form>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<footer th:replace="~{fragments/footer}"></footer>
+<script>
+    function updateModels(brandId) {
+        fetch(`/models/models-by-brand/${brandId}`)
+        .then(response => {
+            return response.json();
+        })
+        .then(models => {
+
+            const modelDropdown = document.getElementById("model");
+            modelDropdown.innerHTML = '<option value="">Всички</option>';
+
+            models.forEach(model => {
+                const option = document.createElement("option");
+                option.value = model.id;
+                option.textContent = model.name;
+                modelDropdown.appendChild(option);
+            });
+        })
+        .catch(error => console.error("Error fetching models:", error));
+    }
+</script>
 </body>
 </html>

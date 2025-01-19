@@ -1,13 +1,11 @@
 package com.example.IBOR.CarPart;
 
-import com.example.IBOR.Car.Car;
-import com.example.IBOR.Car.CarWithBase64Images;
 import com.example.IBOR.CarBrand.BrandRepository;
-import com.example.IBOR.Order.Order;
+import com.example.IBOR.ImageEncoder;
 import com.example.IBOR.OrderItem.OrderItem;
+import com.example.IBOR.OrderItem.OrderItemDTO;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -72,34 +70,69 @@ public class CarPartController {
     @GetMapping("/")
     public String getShowCarParts(Model model) {
         List<CarPart> carParts = (List<CarPart>) carPartRepository.findAll();
-        OrderItem orderItem = new OrderItem();
-
-        List<CarPartWithBase64Images> carPartsWithImages = carParts.stream().map(carPart -> {
-            List<String> base64Images = carPart.getImages().stream()
-                    .map(Base64::encodeBase64String)
-                    .collect(Collectors.toList());
-            return new CarPartWithBase64Images(carPart, base64Images);
-        }).collect(Collectors.toList());
-
-        model.addAttribute("carPartsWithImages", carPartsWithImages);
+        model.addAttribute("carParts", carParts);
+        model.addAttribute("brands", brandRepository.findAll());
+        model.addAttribute("categories", List.of(
+                "Трансмисия",
+                "Спирачна система",
+                "Окачване и кормилно управление",
+                "Електрическа система",
+                "Двигател",
+                "Филтри",
+                "Аксесоари",
+                "Интериор",
+                "Екстериор",
+                "Системи за охлаждане",
+                "Масла и течности"
+        ));
+        model.addAttribute("encoder", new ImageEncoder());
         return "car-part/show";
     }
+
+    @GetMapping("/filter")
+    public String filterCarParts(
+            @RequestParam(value = "brand", required = false) Long brandId,
+            @RequestParam(value = "model", required = false) Long modelId,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+            Model model) {
+        List<CarPart> filteredCarParts = ((List<CarPart>) carPartRepository.findAll()).stream()
+                .filter(carPart -> (brandId == null || carPart.getBrand().getId().equals(brandId)))
+                .filter(carPart -> (modelId == null || carPart.getModel().getId().equals(modelId)))
+                .filter(carPart -> (category.isEmpty() || carPart.getCategory().equalsIgnoreCase(category)))
+                .filter(carPart -> (minPrice == null || carPart.getPrice() >= minPrice))
+                .filter(carPart -> (maxPrice == null || carPart.getPrice() <= maxPrice))
+                .collect(Collectors.toList());
+        model.addAttribute("carParts", filteredCarParts);
+        model.addAttribute("brands", brandRepository.findAll());
+        model.addAttribute("categories", List.of(
+                "Трансмисия",
+                "Спирачна система",
+                "Окачване и кормилно управление",
+                "Електрическа система",
+                "Двигател",
+                "Филтри",
+                "Аксесоари",
+                "Интериор",
+                "Екстериор",
+                "Системи за охлаждане",
+                "Масла и течности"
+        ));
+        model.addAttribute("encoder", new ImageEncoder());
+        return "car-part/show";
+    }
+
 
     @GetMapping("/show/{Id}")
     public String getShowCarPart(@PathVariable("Id") Long id, Model model) {
         CarPart carPart = carPartRepository.findById(id).get();
-        List<String> base64Images = carPart.getImages().stream()
-                .map(Base64::encodeBase64String)
-                .collect(Collectors.toList());
-        CarPartWithBase64Images carPartWithImages = new CarPartWithBase64Images(carPart, base64Images);
-        OrderItem orderItem = new OrderItem();
-        model.addAttribute("carPartWithImages", carPartWithImages);
-        model.addAttribute("orderItem", orderItem);
+        OrderItemDTO orderItemDTO = new OrderItemDTO();
+        orderItemDTO.setQuantity(1);
+        model.addAttribute("carPart", carPart);
+        model.addAttribute("encoder", new ImageEncoder());
+        model.addAttribute("orderItem", orderItemDTO);
+        model.addAttribute("invalidQuantity", false);
         return "car-part/showSingle";
-    }
-
-    @PostMapping("/delete/{id}")
-    public String getSubmitDeleteCarPart(@PathVariable("id") Long id) {
-        return carPartService.submitDeleteCarPart(id);
     }
 }

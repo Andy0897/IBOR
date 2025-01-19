@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar}"></nav>
+
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="card border-0 shadow-sm p-3">
+        <div class="text-center">
+            <img th:src="@{/images/profile-picture.jpg}"
+                 alt="Profile Picture"
+                 class="img-fluid rounded-circle mb-3"
+                 style="width: 120px; height: 120px; object-fit: cover; border: 2px solid #ddd;">
+            <!-- Username -->
+            <h3 class="fw-bold mb-1" th:text="${user.username}"></h3>
+            <!-- Email -->
+            <p class="text-muted mb-2" th:text="${user.email}"></p>
+            <!-- Role (Only for Admins) -->
+            <span th:if="${user.role == 'ADMIN'}" class="badge bg-success">Администратор</span>
+        </div>
+
+        <!-- "My Orders" Button -->
+        <div class="text-center mt-4">
+            <a th:href="@{/orders/profile-orders}" class="btn btn-outline-primary w-100">Моите поръчки</a>
+        </div>
+        <form th:action="@{/logout}" method="post" class="text-center mt-2">
+            <button type="submit" class="btn btn-primary w-100">Излез от профила</button>
+        </form>
+    </div>
+</div>
+<footer th:replace="~{fragments/footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

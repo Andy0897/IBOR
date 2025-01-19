@@ -19,7 +19,7 @@ public class CarPart {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Size(min = 8, message = "Описанието на частта трябва да съдържа поне 6 символа")
+    @Size(min = 6, message = "Описанието на частта трябва да съдържа поне 6 символа")
     @Size(max = 80, message = "Описание на частта не трябва да надвишава 80 символа.")
     private String title;
 
@@ -46,7 +46,6 @@ public class CarPart {
     @Min(value = 1, message = "Цената на частта трябва да бъде поне 1 лв.")
     private double price;
 
-    @Min(value = 1, message = "Наличността трябва да бъде поне 1.")
     private int quantity;
 
     public Long getId() {

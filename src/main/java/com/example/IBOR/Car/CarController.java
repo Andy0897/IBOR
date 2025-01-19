@@ -3,6 +3,7 @@ package com.example.IBOR.Car;
 import com.example.IBOR.CarBrand.BrandRepository;
 import com.example.IBOR.CarModel.ModelDTO;
 import com.example.IBOR.CarModel.ModelRepository;
+import com.example.IBOR.ImageEncoder;
 import jakarta.validation.Valid;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.ResponseEntity;
@@ -36,25 +37,44 @@ public class CarController {
     @GetMapping("/")
     public String getShowCars(Model model) {
         List<Car> cars = (List<Car>) carRepository.findAll();
-
-        List<CarWithBase64Images> carsWithImages = cars.stream().map(car -> {
-            List<String> base64Images = car.getImages().stream()
-                    .map(Base64::encodeBase64String)
-                    .collect(Collectors.toList());
-            return new CarWithBase64Images(car, base64Images);
-        }).collect(Collectors.toList());
-        model.addAttribute("cars", carsWithImages);
+        model.addAttribute("cars", cars);
+        model.addAttribute("brands", brandRepository.findAll());
+        model.addAttribute("encoder", new ImageEncoder());
         return "car/show";
     }
+
+    @GetMapping("/filter")
+    public String filterCars(
+            @RequestParam(value = "brand", required = false) Long brandId,
+            @RequestParam(value = "model", required = false) Long modelId,
+            @RequestParam(value = "minPrice", required = false) Integer minPrice,
+            @RequestParam(value = "maxPrice", required = false) Integer maxPrice,
+            @RequestParam(value = "mileage", required = false) Integer maxMileage,
+            @RequestParam(value = "isOffer", required = false) Boolean isOffer,
+            Model model) {
+
+        List<Car> filteredCars = ((List<Car>) carRepository.findAll()).stream()
+                .filter(car -> (brandId == null || car.getBrand().getId().equals(brandId)))
+                .filter(car -> (modelId == null || car.getModel().getId().equals(modelId)))
+                .filter(car -> (minPrice == null || car.getPrice() >= minPrice))
+                .filter(car -> (maxPrice == null || car.getPrice() <= maxPrice))
+                .filter(car -> (maxMileage == null || car.getMileage() <= maxMileage))
+                .filter(car -> (isOffer == null || car.isOffer() == isOffer))
+                .collect(Collectors.toList());
+
+        model.addAttribute("cars", filteredCars);
+        model.addAttribute("brands", brandRepository.findAll());
+        model.addAttribute("models", modelRepository.findAll());
+        model.addAttribute("encoder", new ImageEncoder());
+        return "car/show";
+    }
+
 
     @GetMapping("/show/{Id}")
     public String getShowCar(@PathVariable("Id") Long id, Model model) {
         Car car = carRepository.findById(id).get();
-        List<String> base64Images = car.getImages().stream()
-                .map(Base64::encodeBase64String)
-                .collect(Collectors.toList());
-        CarWithBase64Images carWithImages = new CarWithBase64Images(car, base64Images);
-        model.addAttribute("car", carWithImages);
+        model.addAttribute("car", car);
+        model.addAttribute("encoder", new ImageEncoder());
         return "car/showSingle";
     }
 
@@ -86,19 +106,6 @@ public class CarController {
     @PostMapping("/delete/{id}")
     public String getSubmitDeleteCar(@PathVariable("id") Long id) {
         return carService.submitDeleteCar(id);
-    }
-
-    @GetMapping("/offers")
-    public String getShowOffers(Model model) {
-        List<Car> cars = (List<Car>) carRepository.findOffers();
-        List<CarWithBase64Images> carsWithImages = cars.stream().map(car -> {
-            List<String> base64Images = car.getImages().stream()
-                    .map(Base64::encodeBase64String)
-                    .collect(Collectors.toList());
-            return new CarWithBase64Images(car, base64Images);
-        }).collect(Collectors.toList());
-        model.addAttribute("cars", carsWithImages);
-        return "car/showOffers";
     }
 
     @GetMapping("/offers/add/{id}")

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -45,18 +44,22 @@ public class CarService {
 
         if (car.getBrand() == null || car.getModel() == null || nullImages ||
                 bindingResult.hasFieldErrors("power") || bindingResult.hasFieldErrors("mileage") ||
-                bindingResult.hasFieldErrors("price") || car.getCategory().equals("null") ||
-                car.getEngine().equals("null") || car.getGearbox().equals("null") || car.getEurostandard().equals("null")) {
+                bindingResult.hasFieldErrors("price") || car.getCategory() == null ||
+                car.getEngine() == null || car.getGearbox() == null || car.getEurostandard() == null) {
+            System.out.println("brand: " + car.getBrand());
+            System.out.println("model: " + car.getModel());
+            System.out.println("engine: " + car.getEngine());
+            System.out.println("gearbox: " + car.getGearbox());
             model.addAttribute("car", car);
             model.addAttribute("brands", brandRepository.findAll());
             model.addAttribute("models", modelRepository.findAll());
             model.addAttribute("areImagesSelected", !nullImages);
-            model.addAttribute("isBrandSelected", !(car.getBrand() == null));
-            model.addAttribute("isModelSelected", !(car.getModel() == null));
-            model.addAttribute("isEngineSelected", !car.getEngine().equals("null"));
-            model.addAttribute("isGearboxSelected", !car.getGearbox().equals("null"));
-            model.addAttribute("isEurostandardSelected", !car.getEurostandard().equals("null"));
-            model.addAttribute("isCategorySelected", !car.getCategory().equals("null"));
+            model.addAttribute("isBrandSelected", car.getBrand() != null);
+            model.addAttribute("isModelSelected", car.getModel() != null);
+            model.addAttribute("isEngineSelected", !car.getEngine().isEmpty());
+            model.addAttribute("isGearboxSelected", !car.getGearbox().isEmpty());
+            model.addAttribute("isEurostandardSelected", !car.getEurostandard().isEmpty());
+            model.addAttribute("isCategorySelected", !car.getCategory().isEmpty());
             return "car/add";
         }
 

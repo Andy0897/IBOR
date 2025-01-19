@@ -2,21 +2,15 @@ package com.example.IBOR.OrderItem;
 
 import com.example.IBOR.CarPart.CarPart;
 import com.example.IBOR.CarPart.CarPartRepository;
-import com.example.IBOR.CarPart.CarPartWithBase64Images;
 import com.example.IBOR.Cart.Cart;
 import com.example.IBOR.Cart.CartRepository;
-import com.example.IBOR.User.User;
+import com.example.IBOR.ImageEncoder;
 import com.example.IBOR.User.UserRepository;
-import jakarta.validation.Valid;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderItemService {
@@ -32,32 +26,38 @@ public class OrderItemService {
         this.cartRepository = cartRepository;
     }
 
-    public String submitOrderItem(OrderItem orderItem, Long carPartId, BindingResult bindingResult, Principal principal, Model model) {
+    public String submitOrderItem(OrderItemDTO orderItemDTO, BindingResult bindingResult, Long carPartId, Principal principal, Model model) {
         CarPart carPart = carPartRepository.findById(carPartId).get();
-        orderItem.setCarPart(carPart);
-        if(bindingResult.hasErrors()) {
-            List<String> base64Images = orderItem.getCarPart().getImages().stream()
-                    .map(Base64::encodeBase64String)
-                    .collect(Collectors.toList());
-            CarPartWithBase64Images carPartWithImages = new CarPartWithBase64Images(orderItem.getCarPart(), base64Images);
-            model.addAttribute("carPartWithImages", carPartWithImages);
-            model.addAttribute("orderItem", orderItem);
+        orderItemDTO.setCarPart(carPart);
+        Cart cart = userRepository.getUserByUsername(principal.getName()).getCart();
+
+        if (bindingResult.hasErrors() || orderItemDTO.getQuantity() > carPart.getQuantity()) {
+            model.addAttribute("carPart", carPart);
+            model.addAttribute("encoder", new ImageEncoder());
+            model.addAttribute("orderItem", orderItemDTO);
+            model.addAttribute("invalidQuantity", orderItemDTO.getQuantity() > carPart.getQuantity());
             return "car-part/showSingle";
         }
-        if(orderItemRepository.findByCarPart(orderItem.getCarPart()) != null) {
-            OrderItem currentOrderItem = orderItemRepository.findByCarPart(orderItem.getCarPart());
-            currentOrderItem.setQuantity(currentOrderItem.getQuantity() + orderItem.getQuantity());
-            orderItem.setTotalPrice(orderItem.getCarPart().getPrice() * currentOrderItem.getQuantity());
+        if (orderItemRepository.findOrderItemInCartByCarPartId(cart.getId(), carPart.getId()) != null) {
+            OrderItem currentOrderItem = orderItemRepository.findOrderItemInCartByCarPartId(cart.getId(), orderItemDTO.getCarPart().getId());
+            currentOrderItem.setQuantity(currentOrderItem.getQuantity() + orderItemDTO.getQuantity());
+            currentOrderItem.setTotalPrice(orderItemDTO.getCarPart().getPrice() * currentOrderItem.getQuantity());
+            carPart.setQuantity(carPart.getQuantity() - orderItemDTO.getQuantity());
+
             orderItemRepository.save(currentOrderItem);
-        }
-        else {
-            orderItem.setTotalPrice(orderItem.getCarPart().getPrice() * orderItem.getQuantity());
-            orderItemRepository.save(orderItem);
-            User user = userRepository.getUserByUsername(principal.getName());
-            Cart cart = user.getCart();
+        } else {
+            OrderItem orderItem = new OrderItem();
+
+            orderItem.setTotalPrice(orderItemDTO.getQuantity() * orderItemDTO.getCarPart().getPrice());
+            orderItem.setCarPart(orderItemDTO.getCarPart());
+            orderItem.setQuantity(orderItemDTO.getQuantity());
             cart.addItem(orderItem);
+            carPart.setQuantity(carPart.getQuantity() - orderItem.getQuantity());
+
+            orderItemRepository.save(orderItem);
             cartRepository.save(cart);
         }
-        return "redirect:/car-parts/show/" + orderItem.getCarPart().getId();
+        carPartRepository.save(carPart);
+        return "redirect:/car-parts/show/" + orderItemDTO.getCarPart().getId();
     }
 }

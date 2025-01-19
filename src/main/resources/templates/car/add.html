@@ -12,7 +12,6 @@
             <select th:field="*{brand}" id="brand" name="brand" class="form-control" onchange="updateModels(this.value)">
                 <option value="">Избери</option>
                 <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-
             </select>
             <div th:if="${!isBrandSelected}" class="alert alert-danger mt-2" role="alert">
                 Полето не може да бъде празно
@@ -32,7 +31,7 @@
         <div class="form-group mb-4">
             <label for="images" class="mb-1">Снимки</label>
             <input type="file" id="images" name="images" multiple class="form-control" accept="image/png, image/gif, image/jpeg"/>
-            <div class="mt-3">
+            <div id="mainImageSection" class="mt-3" style="display: none;">
                 <p>Изберете основната снимка</p>
                 <div id="mainImageOptions"></div>
             </div>
@@ -45,7 +44,7 @@
         <div class="form-group mb-4">
             <label for="engine" class="mb-1">Двигател</label>
             <select id="engine" th:field="*{engine}" class="form-control">
-                <option value="null" selected>Избери</option>
+                <option value="" selected>Избери</option>
                 <option value="Бензинов">Бензинов</option>
                 <option value="Дизелов">Дизелов</option>
                 <option value="Електрически">Електрически</option>
@@ -66,7 +65,7 @@
         <div class="form-group mb-4">
             <label for="eurostandard" class="mb-1">Евростандарт</label>
             <select id="eurostandard" th:field="*{eurostandard}" class="form-control">
-                <option value="null" selected>Избери</option>
+                <option value="" selected>Избери</option>
                 <option value="Евро 1">Евро 1</option>
                 <option value="Евро 2">Евро 2</option>
                 <option value="Евро 3">Евро 3</option>
@@ -82,7 +81,7 @@
         <div class="form-group mb-4">
             <label for="gearbox" class="mb-1">Скоростна кутия</label>
             <select id="gearbox" th:field="*{gearbox}" class="form-control">
-                <option value="null" selected>Избери</option>
+                <option value="" selected>Избери</option>
                 <option value="Ръчна">Ръчна</option>
                 <option value="Автоматична">Автоматична</option>
                 <option value="Полуавтоматична">Полуавтоматична</option>
@@ -95,7 +94,7 @@
         <div class="form-group mb-4">
             <label for="category" class="mb-1">Категория</label>
             <select id="category" th:field="*{category}" class="form-control">
-                <option value="null" selected>Избери</option>
+                <option value="" selected>Избери</option>
                 <option value="Ван">Ван</option>
                 <option value="Джип">Джип</option>
                 <option value="Кабрио">Кабрио</option>
@@ -127,12 +126,21 @@
         <input type="submit" class="btn btn-primary mb-2" style="width: 100%;" value="Публикувай" />
     </form>
 </div>
+<footer th:replace="~{fragments/footer}"></footer>
 <script>
     const imagesInput = document.getElementById('images');
     const mainImageOptions = document.getElementById('mainImageOptions');
+    const mainImageSection = document.getElementById('mainImageSection');
 
     imagesInput.addEventListener('change', (event) => {
         mainImageOptions.innerHTML = '';
+
+        if (event.target.files.length > 0) {
+            mainImageSection.style.display = 'block';
+        } else {
+            mainImageSection.style.display = 'none';
+        }
+
         Array.from(event.target.files).forEach((file, index) => {
             const label = document.createElement('label');
             label.innerHTML = `

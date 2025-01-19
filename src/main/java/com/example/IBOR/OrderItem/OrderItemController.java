@@ -1,11 +1,10 @@
 package com.example.IBOR.OrderItem;
 
-import com.example.IBOR.CarPart.CarPartWithBase64Images;
+import com.example.IBOR.Order.Order;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -20,7 +19,7 @@ public class OrderItemController {
     }
 
     @PostMapping("/submit/{carPartId}")
-    public String getSubmitOrderItem(@Valid @ModelAttribute("orderItem") OrderItem orderItem, BindingResult bindingResult, @PathVariable("carPartId") Long carPartId, Principal principal, Model model) {
-        return orderItemService.submitOrderItem(orderItem, carPartId, bindingResult, principal, model);
+    public String getSubmitOrderItem(@Valid @ModelAttribute("orderItem") OrderItemDTO orderItemDTO, BindingResult bindingResult, @PathVariable("carPartId") Long carPartId, Principal principal, Model model) {
+        return orderItemService.submitOrderItem(orderItemDTO, bindingResult, carPartId, principal, model);
     }
 }
