@@ -8,7 +8,7 @@
     <h1 class="mb-4 text-center">Всички поръчки</h1>
 
     <!-- If there are no orders -->
-    <div th:if="${orders.empty}" class="text-center">
+    <div th:if="${orders.empty}" class="text-center" style="min-height: 250px;">
         <p style="font-size: 1.5rem; color: gray;">Все още няма направени поръчки.</p>
     </div>
 
@@ -23,6 +23,9 @@
                         <p>
                             <strong>Потребител:</strong> <span th:text="${order.user.username}"></span> <br>
                             <strong>Дата:</strong> <span th:text="${order.orderDate}"></span> <br>
+                            <strong>Адрес:</strong> <span th:text="${order.shippingAddress}"></span> <br>
+                            <strong>Град:</strong> <span th:text="${order.city}"></span> <br>
+                            <strong>Пощенски код:</strong> <span th:text="${order.postalCode}"></span> <br>
                             <strong>Брой продукти:</strong> <span th:text="${order.items.size()}"></span> <br>
                             <strong>Статус:</strong> <span th:text="${order.status}"></span> <br>
                             <strong>Обща цена:</strong>
