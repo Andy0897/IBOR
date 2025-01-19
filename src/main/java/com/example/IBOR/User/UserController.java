@@ -5,12 +5,15 @@ import com.example.IBOR.Car.CarRepository;
 import com.example.IBOR.CarPart.CarPart;
 import com.example.IBOR.CarPart.CarPartRepository;
 import com.example.IBOR.ImageEncoder;
+import jakarta.persistence.Access;
 import jakarta.validation.Valid;
+import org.springframework.security.authorization.method.HandleAuthorizationDenied;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.security.config.annotation.web.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -73,6 +76,6 @@ public class UserController {
 
     @GetMapping("/access-denied")
     public String getAccessDenied() {
-        return "error-pages/error-403";
+        return "error/accessDenied";
     }
 }

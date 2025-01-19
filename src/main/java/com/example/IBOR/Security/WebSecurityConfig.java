@@ -26,7 +26,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home", "/images/**").permitAll()
+                        .requestMatchers("/", "/home", "/images/**", "/access-denied", "/not-found").permitAll()
                         .requestMatchers("/sign-in", "/sign-up", "/submit").anonymous()
                         .requestMatchers("/orders/show-all", "/orders/submit-update-status/**", "/car-parts/add", "/car-parts/submit", "/cars/add", "/cars/submit", "/cars/delete/**", "/cars/offers/add/**", "/cars/offers/submit", "/cars/offers/delete/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
@@ -42,9 +42,7 @@ public class WebSecurityConfig {
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.sendRedirect("/access-denied");
                         })
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page Not Found");
-                        })
+
                 )
                 .logout((logout) -> logout.permitAll());
         return http.build();

@@ -11,14 +11,14 @@
             <div class="col-md-4">
                 <label for="brand" class="form-label">Марка</label>
                 <select class="form-control" id="brand" name="brand" onchange="updateModels(this.value)">
-                    <option value="">Избери</option>
+                    <option value="">Всички</option>
                     <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
                 </select>
             </div>
             <div class="col-md-4">
                 <label for="model" class="form-label">Модел</label>
                 <select class="form-control" id="model" name="model">
-                    <option value="">Избери</option>
+                    <option value="">Всички</option>
                 </select>
             </div>
             <div class="col-md-4">
@@ -92,7 +92,7 @@
         .then(models => {
 
             const modelDropdown = document.getElementById("model");
-            modelDropdown.innerHTML = '<option value="">Избери</option>';
+            modelDropdown.innerHTML = '<option value="">Всички</option>';
 
             models.forEach(model => {
                 const option = document.createElement("option");
