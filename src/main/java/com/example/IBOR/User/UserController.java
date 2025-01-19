@@ -36,8 +36,8 @@ public class UserController {
     public String getHome(Model model) {
         List<Car> cars = (List<Car>) carRepository.findAll();
         List<CarPart> carParts = (List<CarPart>) carPartRepository.findAll();
-        model.addAttribute("cars", cars.size() > 4 ? cars.subList(0, 4) : cars);
-        model.addAttribute("carParts", carParts.size() > 4 ? carParts.subList(0, 4) : carParts);
+        model.addAttribute("cars", cars.size() > 3 ? cars.subList(0, 2) : cars);
+        model.addAttribute("carParts", carParts.size() > 3 ? carParts.subList(0, 2) : carParts);
         model.addAttribute("encoder", new ImageEncoder());
         return "home";
     }
@@ -67,6 +67,11 @@ public class UserController {
         User user = userRepository.getUserByUsername(principal.getName());
         model.addAttribute("user", user);
         return "profile";
+    }
+
+    @GetMapping("/about-us")
+    public String getAboutUs() {
+        return "aboutUs";
     }
 
     @GetMapping("/contacts")

@@ -61,7 +61,7 @@ public class CarPartController {
             @RequestParam(value = "mainImageIndex", required = false) Integer mainImageIndex,
             Model model) {
 
-        if (mainImageIndex == null || mainImageIndex < 0 || mainImageIndex >= carPart.getImages().size()) {
+        if (mainImageIndex == null || mainImageIndex < 0 || mainImageIndex >= images.length) {
             mainImageIndex = 0;
         }
         return carPartService.submitCarPart(carPart, bindingResult, images, mainImageIndex, model);

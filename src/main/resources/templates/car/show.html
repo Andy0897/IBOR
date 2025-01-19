@@ -7,7 +7,7 @@
 <div class="container mt-5" style="max-width: 1000px;">
     <div class="mt-5">
         <h2 class="mb-3">Филтър за автомобили</h2>
-        <form th:action="@{/cars/filter}" method="get" class="row g-3">
+        <form th:action="@{/cars/filter}" method="get" class="row g-4">
             <div class="col-md-4">
                 <label for="brand" class="form-label">Марка</label>
                 <select class="form-control" id="brand" name="brand" onchange="updateModels(this.value)">
@@ -60,7 +60,7 @@
                             <img th:src="@{'data:image/jpeg;base64,' + ${encoder.encodeToBase64(car.images.get(car.mainImageIndex))}}"
                                  alt="Main Image" style="object-fit: cover; width: 100%; height: auto; max-height: 200px;"/>
                         </div>
-                        <div class="card-body d-flex flex-column justify-content-between">
+                        <div class="card-body d-flex flex-column" style="min-height: 185px;">
                             <h3 class="card-title text-truncate"
                                 th:text="${car.brand.name} + ' ' + ${car.model.name}"
                                 style="white-space: normal;"></h3>

@@ -97,7 +97,7 @@ public class CarController {
 
     @PostMapping("/submit")
     public String submitCar(@Valid Car car, BindingResult bindingResult, @RequestParam("images") MultipartFile[] images, @RequestParam(value = "mainImageIndex", required = false) Integer mainImageIndex, Model model) {
-        if (mainImageIndex == null || mainImageIndex < 0 || mainImageIndex >= car.getImages().size()) {
+        if (mainImageIndex == null || mainImageIndex < 0 || mainImageIndex >= images.length) {
             mainImageIndex = 0;
         }
         return carService.submitCar(car, bindingResult, images, mainImageIndex, model);
