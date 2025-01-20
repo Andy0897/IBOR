@@ -1,9 +1,12 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" xmlns:sec="http://www.w3.org/1999/xhtml"
-     xmlns:th="http://www.w3.org/1999/xhtml">
+<nav class="navbar navbar-expand-lg bg-body-tertiary" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="container-fluid" style="max-width: 1000px;">
         <a class="navbar-brand" href="/">
             <h2 class="mr-4 text-primary" style="font-weight: bold;">IBOR</h2>
         </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -22,29 +25,30 @@
                     <a class="nav-link" href="/contacts">Контакти</a>
                 </li>
             </ul>
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button sec:authorize="isAnonymous" class="btn btn-outline-primary" onclick="window.location.href='/sign-in';">
-                    Вход
-                </button>
-                <button sec:authorize="isAnonymous" class="btn btn-primary" onclick="window.location.href='/sign-up';">
-                    Регистрация
-                </button>
-                <button sec:authorize="hasAuthority('ADMIN')" class="btn btn-outline-primary dropdown">
-                    <div class="dropdown-toggle" role="button" id="dropdownMenuLink" aria-haspopup="true" aria-expanded="false">
-                        Администраторски панел
+            <div class="d-flex align-items-center">
+                <div sec:authorize="isAnonymous" class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" onclick="window.location.href='/sign-in';">Вход</button>
+                    <button class="btn btn-primary" onclick="window.location.href='/sign-up';">Регистрация</button>
+                </div>
+
+                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center gap-2">
+                    <div class="dropdown">
+                        <button sec:authorize="hasAuthority('ADMIN')" class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+                            Администраторски панел
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="/cars/add">Добави автомобил</a></li>
+                            <li><a class="dropdown-item" href="/car-parts/add">Добави авточаст</a></li>
+                            <li><a class="dropdown-item" href="/orders/show-all">Поръчки</a></li>
+                        </ul>
                     </div>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="position: absolute; transform: translate3d(0px, 37px, 0px); top: 0px; left: 0px; will-change: transform;">
-                        <a class="dropdown-item" href="/cars/add">Добави автомобил</a>
-                        <a class="dropdown-item" href="/car-parts/add">Добави авточаст</a>
-                        <a class="dropdown-item" href="/orders/show-all">Поръчки</a>
-                    </div>
-                </button>
-                <button sec:authorize="isAuthenticated()" class="btn btn-primary" onclick="window.location.href='/cart/';">
-                    <img th:src="@{/images/cart-icon.jpg}" style="width: 25px; height: 25px;">
-                </button>
-                <button sec:authorize="isAuthenticated()" class="btn btn-primary" onclick="window.location.href='/profile';">
-                    <img th:src="@{/images/profile-icon.jpg}" style="width: 25px; height: 25px;">
-                </button>
+                    <button class="btn btn-primary" onclick="window.location.href='/cart/';">
+                        <img th:src="@{/images/cart-icon.jpg}" style="width: 25px; height: 25px;" alt="Cart Icon">
+                    </button>
+                    <button class="btn btn-primary" onclick="window.location.href='/profile';">
+                        <img th:src="@{/images/profile-icon.jpg}" style="width: 25px; height: 25px;" alt="Profile Icon">
+                    </button>
+                </div>
             </div>
         </div>
     </div>

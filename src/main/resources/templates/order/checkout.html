@@ -3,36 +3,37 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
-
-<div class="container mt-5">
-    <h1 class="mb-4 text-center">Създаване на Поръчка</h1>
-    <div class="card shadow-sm p-4" style="max-width: 600px; margin: 0 auto; border-radius: 10px;">
-        <form th:action="@{/orders/submit-checkout}" method="post" th:object="${order}">
-            <div class="mb-3">
-                <label for="shippingAddress" class="form-label">Адрес за Доставка</label>
-                <input type="text" id="shippingAddress" name="shippingAddress" th:field="*{shippingAddress}"
-                       class="form-control" placeholder="Въведете адрес за доставка" required />
-                <div th:if="${#fields.hasErrors('shippingAddress')}" class="text-danger small mt-1" th:text="${#fields.errors('shippingAddress')}"></div>
-            </div>
-            <div class="mb-3">
-                <label for="city" class="form-label">Град</label>
-                <input type="text" id="city" name="city" th:field="*{city}" class="form-control"
-                       placeholder="Въведете град" />
-                <div th:if="${#fields.hasErrors('city')}" class="text-danger small mt-1" th:text="${#fields.errors('city')}"></div>
-            </div>
-            <div class="mb-3">
-                <label for="postalCode" class="form-label">Пощенски Код</label>
-                <input type="text" id="postalCode" name="postalCode" th:field="*{postalCode}" class="form-control"
-                       placeholder="Въведете пощенски код" required />
-                <div th:if="${#fields.hasErrors('postalCode')}" class="text-danger small mt-1" th:text="${#fields.errors('postalCode')}"></div>
-            </div>
-            <input type="hidden" th:field="*{items}"/>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg px-5">Завърши Поръчка</button>
-            </div>
-        </form>
+<main>
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center">Създаване на Поръчка</h1>
+        <div class="card shadow-sm p-4 mx-auto" style="max-width: 600px; border-radius: 10px;">
+            <form th:action="@{/orders/submit-checkout}" method="post" th:object="${order}">
+                <div class="mb-3">
+                    <label for="shippingAddress" class="form-label">Адрес за Доставка</label>
+                    <input type="text" id="shippingAddress" name="shippingAddress" th:field="*{shippingAddress}"
+                           class="form-control" placeholder="Въведете адрес за доставка" required />
+                    <div th:if="${#fields.hasErrors('shippingAddress')}" class="text-danger small mt-1" th:text="${#fields.errors('shippingAddress')}"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">Град</label>
+                    <input type="text" id="city" name="city" th:field="*{city}" class="form-control"
+                           placeholder="Въведете град" />
+                    <div th:if="${#fields.hasErrors('city')}" class="text-danger small mt-1" th:text="${#fields.errors('city')}"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="postalCode" class="form-label">Пощенски Код</label>
+                    <input type="text" id="postalCode" name="postalCode" th:field="*{postalCode}" class="form-control"
+                           placeholder="Въведете пощенски код" required />
+                    <div th:if="${#fields.hasErrors('postalCode')}" class="text-danger small mt-1" th:text="${#fields.errors('postalCode')}"></div>
+                </div>
+                <input type="hidden" th:field="*{items}"/>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Завърши Поръчка</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</main>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

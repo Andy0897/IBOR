@@ -3,52 +3,52 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <div class="container mt-5" style="max-width: 1000px;">
+        <h1 class="text-center mb-4">За нас</h1>
 
-<div class="container mt-5" style="max-width: 1000px;">
-    <h1 class="text-center mb-4">За нас</h1>
-
-    <div class="row align-items-center mb-5">
-        <div class="col-md-6 mb-5">
-            <img th:src="@{/images/image1.jpg}" alt="About Us" class="img-fluid rounded shadow">
+        <div class="row align-items-center mb-5">
+            <div class="col-12 col-md-6 mb-4 mb-md-0">
+                <img th:src="@{/images/image1.jpg}" alt="About Us" class="img-fluid rounded shadow">
+            </div>
+            <div class="col-12 col-md-6">
+                <h2 class="text-primary mb-3">Кои сме ние?</h2>
+                <p class="lead text-muted">
+                    Ние сме водеща компания в сферата на автомобилите и авточастите, посветена на предоставянето на
+                    висококачествени услуги и продукти на нашите клиенти.
+                </p>
+                <p>
+                    С години опит в индустрията, нашият екип работи усилено, за да предложи най-добрите решения за
+                    вашите нужди, свързани с автомобили и части. Нашата цел е да бъдем надежден партньор, на когото
+                    можете да разчитате.
+                </p>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h2 class="text-primary mb-3">Кои сме ние?</h2>
-            <p class="lead text-muted">
-                Ние сме водеща компания в сферата на автомобилите и авточастите, посветена на предоставянето на
-                висококачествени услуги и продукти на нашите клиенти.
-            </p>
-            <p>
-                С години опит в индустрията, нашият екип работи усилено, за да предложи най-добрите решения за
-                вашите нужди, свързани с автомобили и части. Нашата цел е да бъдем надежден партньор, на когото
-                можете да разчитате.
-            </p>
+
+        <div class="row mb-5">
+            <div class="col-12 col-md-6 mb-4 mb-md-0">
+                <h2 class="text-primary mb-3">Нашите ценности</h2>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Качество:</strong> Стремим се към най-доброто качество във всяка стъпка от нашата работа.</li>
+                    <li class="list-group-item"><strong>Доверие:</strong> Винаги поставяме клиентите си на първо място и изграждаме дългосрочни отношения.</li>
+                    <li class="list-group-item"><strong>Иновация:</strong> Ние внедряваме най-новите технологии, за да предложим модерни решения.</li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-6">
+                <h2 class="text-primary mb-3">Нашата мисия</h2>
+                <p>
+                    Нашата мисия е да създадем стойност за нашите клиенти чрез иновативни и достъпни решения.
+                    Вярваме в силата на качеството и устойчивостта, за да предоставим изключително обслужване.
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <h3 class="mb-3">Имате въпроси? Свържете се с нас!</h3>
+            <a href="/contacts" class="btn btn-primary btn-lg">Свържете се с нас</a>
         </div>
     </div>
-
-    <div class="row mb-5">
-        <div class="col-md-6">
-            <h2 class="text-primary mb-3">Нашите ценности</h2>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Качество:</strong> Стремим се към най-доброто качество във всяка стъпка от нашата работа.</li>
-                <li class="list-group-item"><strong>Доверие:</strong> Винаги поставяме клиентите си на първо място и изграждаме дългосрочни отношения.</li>
-                <li class="list-group-item"><strong>Иновация:</strong> Ние внедряваме най-новите технологии, за да предложим модерни решения.</li>
-            </ul>
-        </div>
-        <div class="col-md-6">
-            <h2 class="text-primary mb-3">Нашата мисия</h2>
-            <p>
-                Нашата мисия е да създадем стойност за нашите клиенти чрез иновативни и достъпни решения.
-                Вярваме в силата на качеството и устойчивостта, за да предоставим изключително обслужване.
-            </p>
-        </div>
-    </div>
-
-    <div class="text-center mt-5">
-        <h3 class="mb-3">Имате въпроси? Свържете се с нас!</h3>
-        <a href="/contact" class="btn btn-primary btn-lg">Свържете се с нас</a>
-    </div>
-</div>
-
+</main>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

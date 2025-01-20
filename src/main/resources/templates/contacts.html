@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html lang="bg" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head}">
+</head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <div class="container mt-5" style="max-width: 1000px;">
+        <h1 class="text-center mb-4">Свържете се с нас</h1>
 
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Свържете се с нас</h1>
-
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm p-4">
-                <h4 class="card-title text-primary fw-bold">Контактна информация</h4>
-                <p class="mb-2"><strong>Телефон:</strong> +359 888 123 456</p>
-                <p class="mb-2"><strong>Имейл:</strong> <a href="mailto:help@ibor.com">help@ibor.com</a></p>
-                <p><strong>Работно време:</strong> Понеделник - Петък: 9:00 - 18:00</p>
-                <h4 class="text-center text-primary mb-3">Нашето местоположение</h4>
-                <div class="ratio ratio-16x9">
-                    <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d663.4184493027951!2d23.320520969602573!3d42.69514448387241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa856c385ebadd%3A0xe0d653a672af3b88!2z0KHQvtGE0LjRjyDRhtC10L3RgtGK0YAsINCx0YPQuy4g4oCe0JLQuNGC0L7RiNCw4oCcIDViLCAxMDAwINCh0L7RhNC40Y8!5e1!3m2!1sbg!2sbg!4v1737327447287!5m2!1sbg!2sbg"
-                            style="border:0; max-width: 600px; max-height: 600px;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm p-4">
+                    <h4 class="card-title text-primary fw-bold">Контактна информация</h4>
+                    <p class="mb-2"><strong>Телефон:</strong> +359 888 123 456</p>
+                    <p class="mb-2"><strong>Имейл:</strong> <a href="mailto:help@ibor.com" class="text-decoration-none">help@ibor.com</a></p>
+                    <p><strong>Работно време:</strong> Понеделник - Петък: 9:00 - 18:00</p>
+                    <h4 class="text-center text-primary mb-3">Нашето местоположение</h4>
+                    <div class="ratio ratio-16x9">
+                        <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d663.4184493027951!2d23.320520969602573!3d42.69514448387241!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa856c385ebadd%3A0xe0d653a672af3b88!2z0KHQvtGE0LjRjyDRhtC10L3RgtGK0YAsINCx0YPQuy4g4oCe0JLQuNGC0L7RiNCw4oCcIDViLCAxMDAwINCh0L7RhNC40Y8!5e1!3m2!1sbg!2sbg!4v1737327447287!5m2!1sbg!2sbg"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row mt-5">
-        <div class="col-md-12">
-        </div>
-    </div>
-</div>
+</main>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>

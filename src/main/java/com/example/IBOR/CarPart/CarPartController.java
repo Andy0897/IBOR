@@ -135,4 +135,16 @@ public class CarPartController {
         model.addAttribute("invalidQuantity", false);
         return "car-part/showSingle";
     }
+
+    @GetMapping("/update-quantity/{id}")
+    public String getUpdateQuantity(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("invalidQuantity", false);
+        return "car-part/updateQuantity";
+    }
+
+    @PostMapping("/submit-update-quantity/{id}")
+    public String getSubmitUpdateQuantity(@PathVariable("id") Long id, @RequestParam("quantity") int quantity, Model model) {
+        return carPartService.submitUpdateQuantity(id, quantity, model);
+    }
 }

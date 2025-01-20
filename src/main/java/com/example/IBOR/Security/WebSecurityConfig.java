@@ -28,7 +28,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/home", "/about-us", "/contacts", "/images/**", "/access-denied", "/not-found").permitAll()
                         .requestMatchers("/sign-in", "/sign-up", "/submit").anonymous()
-                        .requestMatchers("/orders/show-all", "/orders/submit-update-status/**", "/car-parts/add", "/car-parts/submit", "/cars/add", "/cars/submit", "/cars/delete/**", "/cars/offers/add/**", "/cars/offers/submit", "/cars/offers/delete/**").hasAuthority("ADMIN")
+                        .requestMatchers("/orders/show-all", "/orders/submit-update-status/**", "/car-parts/add", "/car-parts/submit", "/car-parts/update-quantity/**", "/car-parts/submit-update-quantity/**", "/cars/add", "/cars/submit", "/cars/delete/**", "/cars/offers/add/**", "/cars/offers/submit", "/cars/offers/delete/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

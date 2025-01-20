@@ -3,129 +3,136 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
-<div class="container mt-5" style="max-width: 600px;">
-    <form th:action="@{/cars/submit}" method="post" enctype="multipart/form-data" th:object="${car}">
-        <h1 class="text-center mb-4">Добавяне на обява за автомобил</h1>
+<main>
+    <div class="container mt-5" style="max-width: 600px;">
+        <form th:action="@{/cars/submit}" method="post" enctype="multipart/form-data" th:object="${car}">
+            <h1 class="text-center mb-4">Добавяне на обява за автомобил</h1>
 
-        <div class="form-group mb-4">
-            <label for="brand" class="mb-1">Марка</label>
-            <select th:field="*{brand}" id="brand" name="brand" class="form-control" onchange="updateModels(this.value)">
-                <option value="">Избери</option>
-                <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
-            </select>
-            <div th:if="${!isBrandSelected}" class="alert alert-danger mt-2" role="alert">
-                Полето не може да бъде празно
+            <div class="row g-4">
+                <div class="col-lg-6 col-md-12">
+                    <label for="brand" class="mb-1">Марка</label>
+                    <select th:field="*{brand}" id="brand" name="brand" class="form-control" onchange="updateModels(this.value)">
+                        <option value="">Избери</option>
+                        <option th:each="brand : ${brands}" th:value="${brand.id}" th:text="${brand.name}"></option>
+                    </select>
+                    <div th:if="${!isBrandSelected}" class="alert alert-danger mt-2" role="alert">
+                        Полето не може да бъде празно
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="model" class="mb-1">Модел</label>
+                    <select th:field="*{model}" class="form-control" id="model" name="model">
+                        <option value="">Избери</option>
+                    </select>
+                    <div th:if="${!isModelSelected}" class="alert alert-danger mt-2" role="alert">
+                        Полето не може да бъде празно
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="images" class="mb-1">Снимки</label>
+                    <input type="file" id="images" name="images" multiple class="form-control" accept="image/png, image/gif, image/jpeg" />
+                    <div id="mainImageSection" class="mt-3" style="display: none;">
+                        <p>Изберете основната снимка</p>
+                        <div id="mainImageOptions"></div>
+                    </div>
+                    <div th:if="${hasUploadError}" th:text="Възникна грешка" class="alert alert-danger mt-2" role="alert"></div>
+                    <div th:if="${!areImagesSelected}" class="alert alert-danger mt-2" role="alert">
+                        Полето не може да бъде празно
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="engine" class="mb-1">Двигател</label>
+                    <select id="engine" th:field="*{engine}" class="form-control">
+                        <option value="" selected>Избери</option>
+                        <option value="Бензинов">Бензинов</option>
+                        <option value="Дизелов">Дизелов</option>
+                        <option value="Електрически">Електрически</option>
+                        <option value="Хибриден">Хибриден</option>
+                        <option value="Газ">Газ</option>
+                    </select>
+                    <div th:if="${!isEngineSelected}" class="alert alert-danger mt-2" role="alert">
+                        Полето не може да бъде празно
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="power" class="mb-1">Мощност (к.с.)</label>
+                    <input type="number" id="power" th:field="*{power}" class="form-control" />
+                    <div th:each="error : ${#fields.errors('power')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="eurostandard" class="mb-1">Евростандарт</label>
+                    <select id="eurostandard" th:field="*{eurostandard}" class="form-control">
+                        <option value="" selected>Избери</option>
+                        <option value="Евро 1">Евро 1</option>
+                        <option value="Евро 2">Евро 2</option>
+                        <option value="Евро 3">Евро 3</option>
+                        <option value="Евро 4">Евро 4</option>
+                        <option value="Евро 5">Евро 5</option>
+                        <option value="Евро 6">Евро 6</option>
+                    </select>
+                    <div th:if="${!isEurostandardSelected}" class="alert alert-danger mt-2" role="alert">
+                        Полето не може да бъде празно
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="gearbox" class="mb-1">Скоростна кутия</label>
+                    <select id="gearbox" th:field="*{gearbox}" class="form-control">
+                        <option value="" selected>Избери</option>
+                        <option value="Ръчна">Ръчна</option>
+                        <option value="Автоматична">Автоматична</option>
+                        <option value="Полуавтоматична">Полуавтоматична</option>
+                    </select>
+                    <div th:if="${!isGearboxSelected}" class="alert alert-danger mt-2" role="alert">
+                        Полето не може да бъде празно
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="category" class="mb-1">Категория</label>
+                    <select id="category" th:field="*{category}" class="form-control">
+                        <option value="" selected>Избери</option>
+                        <option value="Ван">Ван</option>
+                        <option value="Джип">Джип</option>
+                        <option value="Кабрио">Кабрио</option>
+                        <option value="Комби">Комби</option>
+                        <option value="Купе">Купе</option>
+                        <option value="Миниван">Миниван</option>
+                        <option value="Пикап">Пикап</option>
+                        <option value="Седан">Седан</option>
+                        <option value="Стреч лимузина">Стреч лимузина</option>
+                        <option value="Хечбек">Хечбек</option>
+                    </select>
+                    <div th:if="${!isCategorySelected}" class="alert alert-danger mt-2" role="alert">
+                        Полето не може да бъде празно
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="mileage" class="mb-1">Пробег (в км.)</label>
+                    <input type="number" id="mileage" th:field="*{mileage}" class="form-control" />
+                    <div th:each="error : ${#fields.errors('mileage')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <label for="price" class="mb-1">Цена</label>
+                    <input type="number" id="price" th:value="${car.price}" th:field="*{price}" class="form-control" />
+                    <div th:each="error : ${#fields.errors('price')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
+                </div>
+
+                <div class="col-12">
+                    <input type="submit" class="btn btn-primary w-100" value="Публикувай" />
+                </div>
             </div>
-        </div>
+        </form>
+    </div>
+</main>
 
-        <div class="form-group mb-4">
-            <label for="model" class="mb-1">Модел</label>
-            <select th:field="*{model}" class="form-control" id="model" name="model">
-                <option value="">Избери</option>
-            </select>
-            <div th:if="${!isModelSelected}" class="alert alert-danger mt-2" role="alert">
-                Полето не може да бъде празно
-            </div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="images" class="mb-1">Снимки</label>
-            <input type="file" id="images" name="images" multiple class="form-control" accept="image/png, image/gif, image/jpeg"/>
-            <div id="mainImageSection" class="mt-3" style="display: none;">
-                <p>Изберете основната снимка</p>
-                <div id="mainImageOptions"></div>
-            </div>
-            <div th:if="${hasUploadError}" th:text="Възникна грешка" class="alert alert-danger mt-2" role="alert"></div>
-            <div th:if="${!areImagesSelected}" class="alert alert-danger mt-2" role="alert">
-                Полето не може да бъде празно
-            </div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="engine" class="mb-1">Двигател</label>
-            <select id="engine" th:field="*{engine}" class="form-control">
-                <option value="" selected>Избери</option>
-                <option value="Бензинов">Бензинов</option>
-                <option value="Дизелов">Дизелов</option>
-                <option value="Електрически">Електрически</option>
-                <option value="Хибриден">Хибриден</option>
-                <option value="Газ">Газ</option>
-            </select>
-            <div th:if="${!isEngineSelected}" class="alert alert-danger mt-2" role="alert">
-                Полето не може да бъде празно
-            </div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="power" class="mb-1">Мощност (к.с.)</label>
-            <input type="number" id="power" th:field="*{power}" class="form-control" />
-            <div th:each="error : ${#fields.errors('power')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="eurostandard" class="mb-1">Евростандарт</label>
-            <select id="eurostandard" th:field="*{eurostandard}" class="form-control">
-                <option value="" selected>Избери</option>
-                <option value="Евро 1">Евро 1</option>
-                <option value="Евро 2">Евро 2</option>
-                <option value="Евро 3">Евро 3</option>
-                <option value="Евро 4">Евро 4</option>
-                <option value="Евро 5">Евро 5</option>
-                <option value="Евро 6">Евро 6</option>
-            </select>
-            <div th:if="${!isEurostandardSelected}" class="alert alert-danger mt-2" role="alert">
-                Полето не може да бъде празно
-            </div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="gearbox" class="mb-1">Скоростна кутия</label>
-            <select id="gearbox" th:field="*{gearbox}" class="form-control">
-                <option value="" selected>Избери</option>
-                <option value="Ръчна">Ръчна</option>
-                <option value="Автоматична">Автоматична</option>
-                <option value="Полуавтоматична">Полуавтоматична</option>
-            </select>
-            <div th:if="${!isGearboxSelected}" class="alert alert-danger mt-2" role="alert">
-                Полето не може да бъде празно
-            </div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="category" class="mb-1">Категория</label>
-            <select id="category" th:field="*{category}" class="form-control">
-                <option value="" selected>Избери</option>
-                <option value="Ван">Ван</option>
-                <option value="Джип">Джип</option>
-                <option value="Кабрио">Кабрио</option>
-                <option value="Комби">Комби</option>
-                <option value="Купе">Купе</option>
-                <option value="Миниван">Миниван</option>
-                <option value="Пикап">Пикап</option>
-                <option value="Седан">Седан</option>
-                <option value="Стреч лимузина">Стреч лимузина</option>
-                <option value="Хечбек">Хечбек</option>
-            </select>
-            <div th:if="${!isCategorySelected}" class="alert alert-danger mt-2" role="alert">
-                Полето не може да бъде празно
-            </div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="mileage" class="mb-1">Пробег (в км.)</label>
-            <input type="number" id="mileage" th:field="*{mileage}" class="form-control" />
-            <div th:each="error : ${#fields.errors('mileage')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
-        </div>
-
-        <div class="form-group mb-4">
-            <label for="price" class="mb-1">Цена</label>
-            <input type="number" id="price" th:value="${car.price}" th:field="*{price}" class="form-control" />
-            <div th:each="error : ${#fields.errors('price')}" th:text="${error}" class="alert alert-danger mt-2" role="alert"></div>
-        </div>
-
-        <input type="submit" class="btn btn-primary mb-2" style="width: 100%;" value="Публикувай" />
-    </form>
-</div>
 <footer th:replace="~{fragments/footer}"></footer>
 <script>
     const imagesInput = document.getElementById('images');
@@ -152,17 +159,12 @@
         });
     });
 
-
     function updateModels(brandId) {
         fetch(`/models/models-by-brand/${brandId}`)
-        .then(response => {
-            return response.json();
-        })
+        .then(response => response.json())
         .then(models => {
-
             const modelDropdown = document.getElementById("model");
-            modelDropdown.innerHTML = '<option value=null>Избери</option>';
-
+            modelDropdown.innerHTML = '<option value="">Избери</option>';
             models.forEach(model => {
                 const option = document.createElement("option");
                 option.value = model.id;

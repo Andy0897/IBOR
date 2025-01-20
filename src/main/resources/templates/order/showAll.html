@@ -3,54 +3,51 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <div class="container mt-5" style="max-width: 600px;">
+        <h1 class="mb-4 text-center">Всички поръчки</h1>
 
-<div class="container mt-5" style="max-width: 600px;">
-    <h1 class="mb-4 text-center">Всички поръчки</h1>
+        <div th:if="${orders.empty}" class="text-center" style="min-height: 250px;">
+            <p style="font-size: 1.5rem; color: gray;">Все още няма направени поръчки.</p>
+        </div>
 
-    <!-- If there are no orders -->
-    <div th:if="${orders.empty}" class="text-center" style="min-height: 250px;">
-        <p style="font-size: 1.5rem; color: gray;">Все още няма направени поръчки.</p>
-    </div>
+        <div class="row" th:if="${!orders.empty}">
+            <div th:each="order : ${orders}" class="col-12 mb-4">
+                <div class="card border-0 shadow-sm p-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-12 col-md-8">
+                            <h5 class="fw-bold">Поръчка № <span th:text="${order.id}"></span></h5>
+                            <p class="mb-2">
+                                <strong>Потребител:</strong> <span th:text="${order.user.username}"></span><br>
+                                <strong>Дата:</strong> <span th:text="${order.orderDate}"></span><br>
+                                <strong>Адрес:</strong> <span th:text="${order.shippingAddress}"></span><br>
+                                <strong>Град:</strong> <span th:text="${order.city}"></span><br>
+                                <strong>Пощенски код:</strong> <span th:text="${order.postalCode}"></span><br>
+                                <strong>Брой продукти:</strong> <span th:text="${order.items.size()}"></span><br>
+                                <strong>Статус:</strong> <span th:text="${order.status}"></span><br>
+                                <strong>Обща цена:</strong>
+                                <span class="text-success fw-bold" th:text="${#numbers.formatDecimal(order.totalPrice, 2, 2)} + ' лв.'"></span>
+                            </p>
+                        </div>
 
-    <!-- If there are orders -->
-    <div class="row" th:if="${!orders.empty}">
-        <div th:each="order : ${orders}" class="col-md-12 mb-4">
-            <div class="card border-0 shadow-sm p-3">
-                <div class="row g-3 align-items-center">
-                    <!-- Order Details -->
-                    <div class="col-md-8">
-                        <h5 class="fw-bold">Поръчка № <span th:text="${order.id}"></span></h5>
-                        <p>
-                            <strong>Потребител:</strong> <span th:text="${order.user.username}"></span> <br>
-                            <strong>Дата:</strong> <span th:text="${order.orderDate}"></span> <br>
-                            <strong>Адрес:</strong> <span th:text="${order.shippingAddress}"></span> <br>
-                            <strong>Град:</strong> <span th:text="${order.city}"></span> <br>
-                            <strong>Пощенски код:</strong> <span th:text="${order.postalCode}"></span> <br>
-                            <strong>Брой продукти:</strong> <span th:text="${order.items.size()}"></span> <br>
-                            <strong>Статус:</strong> <span th:text="${order.status}"></span> <br>
-                            <strong>Обща цена:</strong>
-                            <span class="text-success fw-bold" th:text="${#numbers.formatDecimal(order.totalPrice, 2, 2)} + ' лв.'"></span>
-                        </p>
-                    </div>
-
-                    <div class="col-md-4 text-md-end text-center">
-                        <form th:action="@{/orders/submit-update-status/{orderId}(orderId=${order.id})}"
-                              method="post" class="d-inline w-100">
-                            <label for="status" class="form-label fw-bold w-100 text-start">Статус</label>
-                            <select id="status" name="status" class="form-select mb-2 w-100" th:value="${status}">
-                                <option value="В изчакване">В изчакване</option>
-                                <option value="Изпратено">Изпратено</option>
-                                <option value="Доставено">Доставено</option>
-                            </select>
-                            <button type="submit" class="btn btn-outline-primary btn-sm w-100">Обнови</button>
-                        </form>
+                        <div class="col-12 col-md-4 text-md-end text-center">
+                            <form th:action="@{/orders/submit-update-status/{orderId}(orderId=${order.id})}"
+                                  method="post" class="d-inline w-100">
+                                <label for="status" class="form-label fw-bold w-100 text-start">Статус</label>
+                                <select id="status" name="status" class="form-select mb-2 w-100" th:value="${status}">
+                                    <option value="В изчакване">В изчакване</option>
+                                    <option value="Изпратено">Изпратено</option>
+                                    <option value="Доставено">Доставено</option>
+                                </select>
+                                <button type="submit" class="btn btn-outline-primary btn-sm w-100">Обнови</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 <footer th:replace="~{fragments/footer}"></footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

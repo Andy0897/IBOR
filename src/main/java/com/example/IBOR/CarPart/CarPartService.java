@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -92,4 +94,17 @@ public class CarPartService {
         return "redirect:/car-parts/";
     }
 
+    public String submitUpdateQuantity(Long id, int quantity, Model model) {
+        if (quantity < 1) {
+            CarPart carPart = carPartRepository.findById(id).get();
+            model.addAttribute("id", id);
+            model.addAttribute("invalidQuantity", true);
+            return "car-part/updateQuantity";
+        }
+        CarPart carPart = carPartRepository.findById(id).get();
+        carPart.setQuantity(quantity);
+        carPartRepository.save(carPart);
+
+        return "redirect:/car-parts/show/" + id;
+    }
 }

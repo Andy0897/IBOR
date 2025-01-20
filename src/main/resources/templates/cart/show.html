@@ -3,83 +3,85 @@
 <head th:replace="~{fragments/head}"></head>
 <body>
 <nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <div class="container mt-5" style="max-width: 1000px;">
+        <h1 class="mb-4 text-center">Вашата количка</h1>
 
-<div class="container mt-5" style="max-width: 600px;">
-    <h1 class="mb-4 text-center">Вашата количка</h1>
+        <div th:if="${cart.items.empty}" class="text-center">
+            <p style="font-size: 1.5rem; color: gray;">Вашата количка е празна.</p>
+        </div>
 
-    <div th:if="${cart.items.empty}" class="text-center" style="min-height: 250px;">
-        <p style="font-size: 1.5rem; color: gray;">Вашата количка е празна.</p>
-    </div>
-
-    <div class="row" th:if="${!cart.items.empty}">
-        <div th:each="item : ${cart.items}" class="col-md-12 mb-4">
-            <div class="card border-0 shadow-sm p-3">
-                <div class="row g-3 align-items-center">
-                    <div class="col-md-3">
-                        <img th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(item.carPart.images.get(item.carPart.mainImageIndex))}"
-                             alt="Car Part Image"
-                             class="img-fluid rounded"
-                             style="object-fit: cover; width: 100%; height: auto; max-height: 200px;">
-                    </div>
-                    <div class="col-md-6">
-                        <h5>
-                            <a th:href="@{/car-parts/show/{id}(id=${item.carPart.id})}"
-                               class="text-decoration-none text-primary fw-bold"
-                               th:text="${item.carPart.title}">
-                                Car Part Title
-                            </a>
-                        </h5>
-                        <p class="text-muted small" th:text="${item.carPart.description}"></p>
-                        <p class="mb-0">
-                            <strong>Марка:</strong> <span th:text="${item.carPart.brand.name}"></span> |
-                            <strong>Модел:</strong> <span th:text="${item.carPart.model.name}"></span>
-                        </p>
-                    </div>
-                    <div class="col-md-3 text-md-end text-center">
-                        <p class="mb-2">
-                            <strong>Брой:</strong>
-                            <span class="fw-bold" th:text="${item.quantity}"></span>
-                        </p>
-                        <p class="text-success fw-bold">
-                            <span th:text="${#numbers.formatDecimal(item.totalPrice, 2, 2)} + ' лв.'"></span>
-                        </p>
-                        <form th:action="@{/cart/submit-remove-item/{cartId}/{itemId}(cartId=${cart.id}, itemId=${item.id})}" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Премахни</button>
-                        </form>
+        <div class="row g-4" th:if="${!cart.items.empty}">
+            <div th:each="item : ${cart.items}" class="col-12">
+                <div class="card border-0 shadow-sm p-3">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-3 col-sm-4 col-12">
+                            <img th:src="'data:image/jpeg;base64,' + ${encoder.encodeToBase64(item.carPart.images.get(item.carPart.mainImageIndex))}"
+                                 alt="Car Part Image"
+                                 class="img-fluid rounded"
+                                 style="object-fit: cover; width: 100%; max-height: 200px;">
+                        </div>
+                        <div class="col-md-6 col-sm-8 col-12">
+                            <h5>
+                                <a th:href="@{/car-parts/show/{id}(id=${item.carPart.id})}"
+                                   class="text-decoration-none text-primary fw-bold"
+                                   th:text="${item.carPart.title}">
+                                    Car Part Title
+                                </a>
+                            </h5>
+                            <p class="text-muted small" th:text="${item.carPart.description}"></p>
+                            <p class="mb-0">
+                                <strong>Марка:</strong> <span th:text="${item.carPart.brand.name}"></span> |
+                                <strong>Модел:</strong> <span th:text="${item.carPart.model.name}"></span>
+                            </p>
+                        </div>
+                        <div class="col-md-3 text-md-end text-sm-start text-center">
+                            <p class="mb-2">
+                                <strong>Брой:</strong>
+                                <span class="fw-bold" th:text="${item.quantity}"></span>
+                            </p>
+                            <p class="text-success fw-bold">
+                                <span th:text="${#numbers.formatDecimal(item.totalPrice, 2, 2)} + ' лв.'"></span>
+                            </p>
+                            <form th:action="@{/cart/submit-remove-item/{cartId}/{itemId}(cartId=${cart.id}, itemId=${item.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Премахни</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="card border-0 shadow-sm p-4 mt-4" th:if="${!cart.items.empty}">
-        <h4 class="text-center">Обобщение на поръчката</h4>
-        <div class="d-flex justify-content-between mt-3">
-            <p class="mb-0"><strong>Общо продукти:</strong></p>
-            <p class="mb-0" th:text="${cart.items.size()}"></p>
-        </div>
-        <div class="d-flex justify-content-between mt-3">
-            <p class="mb-0"><strong>Обща цена:</strong></p>
-            <p class="mb-0 text-success fw-bold" th:text="${#numbers.formatDecimal(cartTotalPrice, 2, 2)} + ' лв.'"></p>
-        </div>
-        <div class="d-flex justify-content-between mt-3">
-            <p class="mb-0"><strong>Доставка:</strong></p>
-            <p class="mb-0">Безплатна</p>
-        </div>
 
-        <div class="text-center mt-4">
-            <form th:action="@{/orders/checkout}" method="get" th:object="${cart}">
-                <input type="hidden" th:field="*{id}" />
-                <div th:each="item, iterStat : *{items}">
-                    <input type="hidden" th:field="*{items[__${iterStat.index}__].id}" />
-                    <input type="hidden" th:field="*{items[__${iterStat.index}__].quantity}" />
-                    <input type="hidden" th:field="*{items[__${iterStat.index}__].totalPrice}" />
-                    <input type="hidden" th:field="*{items[__${iterStat.index}__].carPart.id}" />
-                </div>
-                <button class="btn btn-primary btn-lg px-5">Поръчай</button>
-            </form>
+        <div class="card border-0 shadow-sm p-4 mt-4" th:if="${!cart.items.empty}">
+            <h4 class="text-center">Обобщение на поръчката</h4>
+            <div class="d-flex justify-content-between mt-3">
+                <p class="mb-0"><strong>Общо продукти:</strong></p>
+                <p class="mb-0" th:text="${cart.items.size()}"></p>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+                <p class="mb-0"><strong>Обща цена:</strong></p>
+                <p class="mb-0 text-success fw-bold" th:text="${#numbers.formatDecimal(cartTotalPrice, 2, 2)} + ' лв.'"></p>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+                <p class="mb-0"><strong>Доставка:</strong></p>
+                <p class="mb-0">Безплатна</p>
+            </div>
+
+            <div class="text-center mt-4">
+                <form th:action="@{/orders/checkout}" method="get" th:object="${cart}">
+                    <input type="hidden" th:field="*{id}" />
+                    <div th:each="item, iterStat : *{items}">
+                        <input type="hidden" th:field="*{items[__${iterStat.index}__].id}" />
+                        <input type="hidden" th:field="*{items[__${iterStat.index}__].quantity}" />
+                        <input type="hidden" th:field="*{items[__${iterStat.index}__].totalPrice}" />
+                        <input type="hidden" th:field="*{items[__${iterStat.index}__].carPart.id}" />
+                    </div>
+                    <button class="btn btn-primary btn-lg px-5">Поръчай</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</main>
 <footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>
