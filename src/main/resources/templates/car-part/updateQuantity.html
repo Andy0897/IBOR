@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head}"></head>
+<body>
+<nav th:replace="~{fragments/navbar}"></nav>
+<main>
+    <div class="container mt-5" style="max-width: 400px;">
+        <form th:action="@{/car-parts/submit-update-quantity/{id}(id=${id})}" method="post" class="shadow-sm p-4 rounded">
+            <h1 class="text-center mb-4">Актуализиране на наличност</h1>
+            <div class="form-group mb-4">
+                <label for="quantity" class="mb-1">Нова Наличност</label>
+                <input type="number" id="quantity" name="quantity" class="form-control" min="1" placeholder="Въведете новата наличност" required>
+                <div th:if="${invalidQuantity}" class="alert alert-danger mt-2" role="alert">
+                    Наличността трябва да бъде поне 1.
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary w-100" value="Запази промените">
+        </form>
+    </div>
+</main>
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>
