@@ -56,7 +56,7 @@ public class OrderController {
     }
 
     @GetMapping("/profile-orders")
-    public String getShowProfileOrders(Principal principal, Model model) {
+    public String getShowProfileOrders(String name, Principal principal, Model model) {
         User user = userRepository.getUserByUsername(principal.getName());
         List<Order> orders = orderRepository.findOrdersByUser(user);
         Collections.reverse(orders);

@@ -24,7 +24,7 @@ public class CarPart {
     private String title;
 
     @NotEmpty(message = "Полето не може да бъде празно.")
-    @Size(max = 255, message = "Описанието на частта не трябва да надвишава 255 символа.")
+    @Size(max = 800, message = "Описанието на частта не трябва да надвишава 800 символа.")
     private String description;
 
     @ManyToOne

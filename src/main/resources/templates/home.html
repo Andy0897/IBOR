@@ -76,7 +76,7 @@
                                     <img th:src="@{'data:image/jpeg;base64,' + ${encoder.encodeToBase64(carPart.images.get(carPart.mainImageIndex))}}"
                                          alt="Main Image" style="object-fit: cover; width: 100%; height: auto; max-height: 200px;"/>
                                 </div>
-                                <div class="card-body d-flex flex-column justify-content-between">
+                                <div class="card-body d-flex flex-column"  style="min-height: 250px;">
                                     <h3 class="card-title text-truncate" th:text="${carPart.title}" style="white-space: normal;"></h3>
                                     <p th:if="${carPart.description.length() <= 24}"
                                        class="card-text text-muted text-truncate" th:text="${carPart.description}" style="white-space: normal;"></p>

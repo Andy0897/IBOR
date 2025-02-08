@@ -1,6 +1,5 @@
 package com.example.IBOR.OrderItem;
 
-import com.example.IBOR.Order.Order;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

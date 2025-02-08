@@ -43,7 +43,10 @@ public class UserController {
     }
 
     @GetMapping("/sign-in")
-    public String getSignIn() {
+    public String getSignIn(Principal principal) {
+        if (principal != null) {
+            return "redirect:/access-denied";
+        }
         return "sign-in";
     }
 
